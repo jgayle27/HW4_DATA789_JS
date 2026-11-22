@@ -13,7 +13,7 @@ set -euo pipefail
 # that ACR name as $1 so AKS can pull it (AcrPull wired via --attach-acr).
 # ─────────────────────────────────────────────────────────────────────────────
 source "$(dirname "$0")/config.env"
-ACR_NAME="${1:?usage: ./aks_bonus.sh trustback-fraud.ambitiouswave-be0489bf.westus   (from deploy_azure.sh output)}"
+ACR_NAME="${1:?usage: ./aks_bonus.sh trustback-fraud.ambitiouswave-be0489bf   (from deploy_azure.sh output)}"
 
 SUFFIX="$(echo "${USER:-$RANDOM}" | tr -cd 'a-z0-9' | cut -c1-12)"
 LOCATION="${LOCATION:-eastus2}"              # default eastus2 (centralus is blocked on Azure for Students); override: export LOCATION=<allowed region>
