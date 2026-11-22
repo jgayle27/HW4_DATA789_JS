@@ -45,9 +45,9 @@ spec:
             requests:                             # what the scheduler reserves
               cpu: "100m"
               memory: "128Mi"                     
-            limits:                               # hard ceiling. HW4: right-size these per the assignment
-              cpu: "250m"                         # was cpu: "500m"
-              memory: "192Mi"                     # was memory: "256Mi" You want some extra space in case there is an issue with the number of requests
+            limits:                               # hard ceiling. Right-sized.
+              cpu: "250m"                         # changed due to HW4 requirement
+              memory: "192Mi"                     # changed due to HW4 requirement
           # Probes hit GET /health — it returns 200 WITHOUT touching Redis, so pods
           # report Ready even before Redis is up.
           startupProbe:                           # allow a slow model-load to warm up (~150s)
