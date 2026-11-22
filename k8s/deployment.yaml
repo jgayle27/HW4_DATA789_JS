@@ -5,10 +5,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: trustbank-fraud
-  labels:
+  labels: 
     app: trustbank-fraud
     course: data789
     assignment: hw4
+    owner: jgayle
 spec:
   replicas: 3                         # graded: exactly 3 replicas
   revisionHistoryLimit: 5
@@ -25,7 +26,7 @@ spec:
       labels:
         app: trustbank-fraud
         color: blue                    # only used by the blue-green variant (k8s/blue-green/)
-        # HW4: add  owner: <your-onyen>  here (and on the Deployment's metadata.labels above)
+        owner: jgayle  # here (and on the Deployment's metadata.labels above)
     spec:
       terminationGracePeriodSeconds: 30   # give the drain below time to finish
       containers:
@@ -43,10 +44,10 @@ spec:
           resources:
             requests:                             # what the scheduler reserves
               cpu: "100m"
-              memory: "128Mi"
+              memory: "128Mi"                     
             limits:                               # hard ceiling. HW4: right-size these per the assignment
-              cpu: "500m"
-              memory: "256Mi"
+              cpu: "250m"                         # was cpu: "500m"
+              memory: "192Mi"                     # was memory: "256Mi" You want some extra space in case there is an issue with the number of requests
           # Probes hit GET /health — it returns 200 WITHOUT touching Redis, so pods
           # report Ready even before Redis is up.
           startupProbe:                           # allow a slow model-load to warm up (~150s)
