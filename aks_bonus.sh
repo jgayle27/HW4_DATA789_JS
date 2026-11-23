@@ -20,6 +20,11 @@ LOCATION="${LOCATION:-eastus2}"              # default eastus2 (centralus is blo
 RG="rg-data789-hw4-aks-${SUFFIX}"
 CLUSTER="aks-data789-hw4"
 
+echo "▶ registering resource providers (idempotent)…"
+az provider register -n Microsoft.App --wait
+az provider register -n Microsoft.ContainerRegistry --wait
+az provider register -n Microsoft.OperationalInsights --wait
+
 echo "▶ creating resource group: $RG ($LOCATION)"
 az group create -n "$RG" -l "$LOCATION" -o none
 
