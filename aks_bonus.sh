@@ -23,6 +23,8 @@ CLUSTER="aks-data789-hw4"
 echo "▶ creating resource group: $RG ($LOCATION)"
 az group create -n "$RG" -l "$LOCATION" -o none
 
+esac
+
 # Resolve an allowed region. An explicit `export LOCATION=<region>` wins if the policy allows it.
 # Otherwise, if the subscription restricts regions via Azure Policy (common on Azure for Students,
 # and the allowed set VARIES per subscription), auto-pick an allowed one so the deploy does not
