@@ -45,6 +45,11 @@ fi
 echo "▶ region       : $LOCATION"
 
 echo "▶ creating a 1-node AKS cluster (Standard_B2s, within the free B-series hours)…"
+az aks create -g "$RG" -n "$CLUSTER" \
+  --node-count 1 --node-vm-size Standard_B2s \
+  --attach-acr "$ACR_NAME" \
+  --generate-ssh-keys -o none
+
 # I added this from deploy_azure.sh to try and circumvent Azure PowerShell's location gate.
 # Resolve an allowed region. An explicit `export LOCATION=<region>` wins if the policy allows it.
 # Otherwise, if the subscription restricts regions via Azure Policy (common on Azure for Students,
@@ -59,11 +64,7 @@ if [ -n "${ALLOWED}" ] && ! printf '%s\n' "${ALLOWED}" | grep -qx "${LOCATION}";
   echo "      to pick a different allowed region:  export LOCATION=<region>  and re-run."
   LOCATION="${NEW_LOCATION}"
 fi
-echo "▶ region       : $LOCATION"
-az aks create -g "$RG" -n "$CLUSTER" \
-  --node-count 1 --node-vm-size Standard_B2s \
-  --attach-acr "$ACR_NAME" \
-  --generate-ssh-keys -o none
+echo "▶ region       : $LOCATION"  
 
 echo "▶ fetching kubeconfig…"
 az aks get-credentials -g "$RG" -n "$CLUSTER" --overwrite-existing
