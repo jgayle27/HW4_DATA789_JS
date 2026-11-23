@@ -15,4 +15,4 @@ Why do the liveness/readiness probes target `/health` instead of `/predict`?
 ## 3. Autoscaling under load
 Your HPA scales at 40% CPU up to 8 pods. If request volume doubled, what would you expect to happen — and what happens once it reaches the maximum?
 
-> If the request volume doubled, I would anticipate that the HPA would scale up the number of pods to balance the request volume better. Once the HPA has scaled to the maximum limits (40% CPU at 8 pods), there would not be an automatic increase in CPU available or additional pods created, so additional large request volume would result in a lag where the container is paused until more CPU is available (increased latency).
+> If the request volume doubled, I would anticipate that the HPA would scale up the number of pods to balance the request volume better. Once the HPA has scaled to the maximum limits (pushes past 40% CPU at 8 pods), there would not be an automatic increase in CPU or additional pods created, so additional large request volume would result in a lag where the container is paused until more CPU is available (increased latency).
