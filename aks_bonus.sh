@@ -21,10 +21,8 @@ RG="rg-data789-hw4-aks-${SUFFIX}"
 CLUSTER="aks-data789-hw4"
 
 echo "▶ creating resource group: $RG ($LOCATION)"
-az group create -n "$RG" -l "$LOCATION" -o none
 
-esac
-
+# I added this from deploy_azure.sh to try and circumvent Azure PowerShell's location gate.
 # Resolve an allowed region. An explicit `export LOCATION=<region>` wins if the policy allows it.
 # Otherwise, if the subscription restricts regions via Azure Policy (common on Azure for Students,
 # and the allowed set VARIES per subscription), auto-pick an allowed one so the deploy does not
@@ -39,6 +37,8 @@ if [ -n "${ALLOWED}" ] && ! printf '%s\n' "${ALLOWED}" | grep -qx "${LOCATION}";
   LOCATION="${NEW_LOCATION}"
 fi
 echo "▶ region       : $LOCATION"
+
+az group create -n "$RG" -l "$LOCATION" -o none
 
 echo "▶ creating a 1-node AKS cluster (Standard_B2s, within the free B-series hours)…"
 az aks create -g "$RG" -n "$CLUSTER" \
