@@ -23,6 +23,21 @@ CLUSTER="aks-data789-hw4"
 echo "▶ creating resource group: $RG ($LOCATION)"
 az group create -n "$RG" -l "$LOCATION" -o none
 
+# Resolve an allowed region. An explicit `export LOCATION=<region>` wins if the policy allows it.
+# Otherwise, if the subscription restricts regions via Azure Policy (common on Azure for Students,
+# and the allowed set VARIES per subscription), auto-pick an allowed one so the deploy does not
+# fail with RequestDisallowedByAzure.
+ALLOWED="$(az policy assignment list --disable-scope-strict-match \
+  --query "[?parameters].parameters.listOfAllowedLocations.value[]" -o tsv 2>/dev/null | tr '\t' '\n' | sed '/^[[:space:]]*$/d')"
+if [ -n "${ALLOWED}" ] && ! printf '%s\n' "${ALLOWED}" | grep -qx "${LOCATION}"; then
+  NEW_LOCATION="$(printf '%s\n' "${ALLOWED}" | head -1)"
+  echo "   ⚠️  region '${LOCATION}' is not permitted by your subscription policy."
+  echo "      auto-selecting '${NEW_LOCATION}'  (allowed: $(printf '%s ' ${ALLOWED}))"
+  echo "      to pick a different allowed region:  export LOCATION=<region>  and re-run."
+  LOCATION="${NEW_LOCATION}"
+fi
+echo "▶ region       : $LOCATION"
+
 echo "▶ creating a 1-node AKS cluster (Standard_B2s, within the free B-series hours)…"
 az aks create -g "$RG" -n "$CLUSTER" \
   --node-count 1 --node-vm-size Standard_B2s \
